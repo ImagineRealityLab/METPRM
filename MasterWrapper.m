@@ -30,8 +30,25 @@ for sub = 1:nSubs
     
     fprintf('Processing sub %d out of %d \n',sub,nSubs)
 
+    if ~exist(fullfile(resultDir{dataID(sub)},sprintf('sub_%03d.mat',sub)),'file') 
+    %% Read in data
+    cfg = [];
+    cfg.dataFile   = dataFiles{sub};
+    cfg.num_steps  = 20;   
+    cfg.startVis   = 46;
+    cfg.nMainBlocks = 12;
+    
+    data = read_data(cfg);
+    
+    save(fullfile(root,sprintf('sub_%03d',sub)),'data');
+    
+    else
+    
     % load the data
     load(fullfile(resultDir{dataID(sub)},sprintf('sub_%03d.mat',dataID(sub,2))),'data')
+    
+    end
+    
     prolificIDs{sub} = data.prolificID;
       
     % Analyse the data
@@ -126,3 +143,4 @@ fit = hierarchicalFitting(group_data);
 
 % plot results
 plot_hierarchical_model_fit(fit)
+
